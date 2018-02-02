@@ -65,8 +65,6 @@ parts:
       - python3-wheel
       - libffi-dev
       - libssl-dev
-    stage-packages:
-      - libssl1.0.0
     prepare: |
        set -e
        packages_dir="$(readlink -e ../packages)"
