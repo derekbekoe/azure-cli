@@ -3,7 +3,7 @@ summary: Microsoft Azure CLI 2.0
 description: |
  A great cloud needs great tools; we're excited to introduce Azure CLI 2.0, our
  next generation multi-platform command line experience for Azure.
-version: "2.0.30"
+version: "release"
 confinement: classic
 grade: stable
 apps:
@@ -13,9 +13,7 @@ apps:
 parts:
   azure-cli:
     plugin: python
-    source-type: git
-    source: https://github.com/derekbekoe/azure-cli.git
-    source-branch: snap-1
+    source: .
     python-version: python3
     build-packages:
       - build-essential
@@ -38,3 +36,5 @@ parts:
       install build_scripts/snap/az.snap.completion $SNAPCRAFT_PART_INSTALL/az.completion
       # PEP 394 says you should use python3, but the client uses python.
       ln -s python3 $SNAPCRAFT_PART_INSTALL/usr/bin/python
+    prime:
+      - -lib/python3.5/site-packages/tabulate-0.7.7.dist-info/.PKG-INFO.swp
