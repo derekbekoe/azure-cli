@@ -51,6 +51,7 @@ class AzCli(CLI):
         CONFIG.load(os.path.join(azure_folder, 'az.json'))
         SESSION.load(os.path.join(azure_folder, 'az.sess'), max_age=3600)
         self.cloud = get_active_cloud(self)
+        logger.warning('This is from my PR')
         logger.debug('Current cloud config:\n%s', str(self.cloud.name))
 
         register_extensions(self)
