@@ -33,14 +33,13 @@ COPY . /azure-cli
 # ca-certificates
 
 # curl - required for installing jp
-# jq - we include jq as a useful tool
 # pip wheel - required for CLI packaging
 # jmespath-terminal - we include jpterm as a useful tool
 # 1. Build packages and store in tmp dir
 # 2. Install the cli and the other command modules that weren't included
 # 3. Temporary fix - install azure-nspkg to remove import of pkg_resources in azure/__init__.py (to improve performance)
-RUN apk add --no-cache bash openssh ca-certificates jq curl openssl git \
- && apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev \
+RUN apt-get install -y ca-certificates curl openssl git \
+ && apt-get install -y gcc make libffi-dev \
  && update-ca-certificates \
  && curl https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64 -o /usr/local/bin/jp \
  && chmod +x /usr/local/bin/jp \
@@ -53,16 +52,7 @@ RUN apk add --no-cache bash openssh ca-certificates jq curl openssl git \
     all_modules=`find $TMP_PKG_DIR -name "*.whl"`; \
     pip install --no-cache-dir $all_modules; \
     pip install --no-cache-dir --force-reinstall --upgrade azure-nspkg azure-mgmt-nspkg;' \
- && cat /azure-cli/az.completion > ~/.bashrc \
- && runDeps="$( \
-    scanelf --needed --nobanner --recursive /usr/local \
-        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-        | sort -u \
-        | xargs -r apk info --installed \
-        | sort -u \
-    )" \
- && apk add --virtual .rundeps $runDeps \
- && apk del .build-deps 
+ && cat /azure-cli/az.completion > ~/.bashrc
 
 WORKDIR /
 
